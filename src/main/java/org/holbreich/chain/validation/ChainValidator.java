@@ -11,7 +11,7 @@ public class ChainValidator {
 		this.chain = chain;
 	}
 
-	public boolean isChainValide() {
+	public boolean isChainValid() {
 		if (chain.getSize() > 1) {
 			Block previousBlock;
 			Block currentBlock;
@@ -19,8 +19,8 @@ public class ChainValidator {
 			for (int i = 1; i < chain.getSize(); i++) {
 				previousBlock  = chain.getBlock(i-1);
 				currentBlock  = chain.getBlock(i);
-				calculatedHash = chain.getHasher().generateHash(currentBlock.getTimestamp()+ currentBlock.getData()+ previousBlock.getHash());
-				if(calculatedHash != currentBlock.getHash()) {
+				calculatedHash = chain.getHasher().generateHash(currentBlock.getData()+ previousBlock.getHash()+currentBlock.getTimestamp());
+				if(!calculatedHash.equals(currentBlock.getHash())) {
 					System.out.print("Corrupted BLOCK Nr. "+i+ " ");
 					return false;
 				}

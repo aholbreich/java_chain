@@ -3,7 +3,7 @@ package org.holbreich.demo;
 import org.holbreich.chain.Block;
 import org.holbreich.chain.Blockchain;
 
-public class Chainprinter {
+public class ChainPrinter {
 
 	public static void printChain(Blockchain chain) {
 

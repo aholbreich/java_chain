@@ -40,7 +40,8 @@ class BlockTest {
 
         block.finalizeBlock(new DefaultHasher());
 
-        assertEquals("4045323aa5a3184a022a26bc1f695aef053cf01e0c92fb2afbfe670725c2b8b5", block.getHash());
+        DefaultHasher hasher = new DefaultHasher();
+        assertEquals(hasher.generateHash(block.getData()+block.getPreviousHash()+block.getTimestamp()), block.getHash());
         assertTrue(block.isFinal());
     }
 

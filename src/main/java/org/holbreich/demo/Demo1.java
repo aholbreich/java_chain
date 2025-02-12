@@ -17,7 +17,7 @@ public class Demo1 {
         ChainValidator validator = new ChainValidator(myBlockchain);
 
         // Validate the blockchain
-        System.out.println("Blockchain valid? " + validator.isChainValide() );
-        Chainprinter.printChain(myBlockchain);
+        System.out.println("Blockchain is " + (validator.isChainValid()? "valid" : "INVALID!")); 
+        ChainPrinter.printChain(myBlockchain);
     }
 }

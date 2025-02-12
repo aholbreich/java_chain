@@ -40,7 +40,7 @@ public class Block {
 		if (this.hash != null) {
 			throw new IllegalStateException("Block is already finalized");
 		}
-		this.hash = hasher.generateHash(timestamp + data + previousHash); // order need to stay same
+		this.hash = hasher.generateHash(data + previousHash+timestamp); // order need to stay same
 	}
 
 	public String getHash() {

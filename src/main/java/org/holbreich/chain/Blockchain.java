@@ -9,13 +9,15 @@ import org.holbreich.chain.hashing.IHasher;
 
 public class Blockchain {
 	
+	public static final String GENESIS_BLOCK_DATA = "Genesis Block";
+	public static final String GENESIS_HASH = "_";
 	private List<Block> chain;
 	private final IHasher hasher;
 
 	public Blockchain() {
 		chain = new ArrayList<>();
 		hasher = new DefaultHasher();
-		addFinalized(new Block("Genesis Block", "0", Instant.now().getEpochSecond()));
+		addFinalized(new Block(GENESIS_BLOCK_DATA, GENESIS_HASH, Instant.now().getEpochSecond()));
 	}
 
 	/**
