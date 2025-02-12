@@ -7,6 +7,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+//TODO make this a Service
 public interface PeerManager {
 
     static final Logger log = LoggerFactory.getLogger(PeerManager.class);

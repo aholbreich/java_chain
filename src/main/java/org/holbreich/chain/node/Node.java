@@ -1,15 +1,13 @@
 package org.holbreich.chain.node;
 
-import java.io.IOException;
-import java.io.ObjectOutputStream;
-import java.net.InetSocketAddress;
-import java.net.Socket;
-import java.util.ArrayList;
+import java.net.UnknownHostException;
 import java.util.List;
 import java.util.Scanner;
 
 import org.holbreich.chain.Block;
 import org.holbreich.chain.Blockchain;
+import org.holbreich.net.LocalNetDiscovery;
+import org.holbreich.net.LocalNetDiscoveryListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,8 +22,15 @@ public class Node implements PeerManager {
 
     public static void main(String[] args) throws InterruptedException {
 
-        serverThread = new SimpleServerThread(getPort(args), chain);
+        int port = getPort(args);
+        serverThread = new SimpleServerThread(port, chain);
         serverThread.start();
+
+        broadcastDiscovery(port);
+
+        LocalNetDiscoveryListener discoveryListenerThread = new LocalNetDiscoveryListener();
+        discoveryListenerThread.start();
+        
 
         // Simulating block creation and broadcasting to peers
         Scanner scanner = new Scanner(System.in);
@@ -50,9 +55,19 @@ public class Node implements PeerManager {
         }
         scanner.close();
         log.warn("Stoping Server thread");
+        discoveryListenerThread.setRunning(false);
         serverThread.setRunning(false);
         serverThread.join(200);
         System.exit(0);
+    }
+
+    private static void broadcastDiscovery(int port) {
+        LocalNetDiscovery discovery = new LocalNetDiscovery();
+        try {
+            discovery.broadcastPresence(port);
+        } catch (UnknownHostException e) {
+            log.error("Error broadcasting own presence: {}", e.getMessage());
+        }
     }
 
     private static int getPort(String[] args) {

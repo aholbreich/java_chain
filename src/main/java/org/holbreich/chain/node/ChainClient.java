@@ -36,7 +36,6 @@ public class ChainClient {
             String latestHash = (String) in.readObject();
             log.debug("Retreived lastes hash: {} ", latestHash);
             // Read and print the server's response (expected: "ACK")
-            introspectResponse(in);
 
             return latestHash;
         } catch (IOException | ClassNotFoundException e) {
@@ -59,9 +58,7 @@ public class ChainClient {
             log.info("Sending {} blocks to {}", blocks.size(), peerAddress.toString());
             out.writeObject(blocks);
 
-            introspectResponse(in);
-
-        } catch (IOException | ClassNotFoundException e) {
+        } catch (IOException e) {
             log.debug("Error communicating with the server {}", e.getMessage());
         }
     }
@@ -78,24 +75,38 @@ public class ChainClient {
                 ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
                 ObjectInputStream in = new ObjectInputStream(socket.getInputStream())) {
 
-            String socketAddr = "PEER_" + host + "__" + port;
+            String socketAddr = "PEER," + host + "," + port;
             log.info("Trying to register new peer {}", socketAddr);
             out.writeObject(socketAddr);
-            introspectResponse(in);
 
-        } catch (IOException | ClassNotFoundException e) {
+        } catch (IOException e) {
             log.debug("Error communicating with the server {}", e.getMessage());
         }
     }
 
-    private void introspectResponse(ObjectInputStream in) throws IOException, ClassNotFoundException {
-        // Read and print the server's response (expected: "ACK")
-        Object response = in.readObject();
-        if (response != null) {
-            log.debug("closed by: {} ", response.toString());
-        } else {
-            log.warn("Retrieved NULL, expected ACK");
-        }
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((peerAddress == null) ? 0 : peerAddress.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        ChainClient other = (ChainClient) obj;
+        if (peerAddress == null) {
+            if (other.peerAddress != null)
+                return false;
+        } else if (!peerAddress.equals(other.peerAddress))
+            return false;
+        return true;
     }
 
 }

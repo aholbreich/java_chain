@@ -3,6 +3,7 @@ package org.holbreich.chain.node;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.List;
@@ -34,6 +35,7 @@ public class SimpleServerThread extends Thread {
                 Socket socket = serverSocket.accept();
                 new Thread(() -> handleClient(socket)).start();
             }
+            log.info("Server thread stopped");
         } catch (IOException e) {
             log.error("Error starting/running server: {}", e.getMessage());
         }
@@ -53,14 +55,14 @@ public class SimpleServerThread extends Thread {
             log.debug("Received: {}", received);
             // Requesting the latest block hash
             if (received instanceof String && ((String) received).equals("LATEST_HASH")) {
-                log.debug("Received new request for latest hash.");
                 out.writeObject(blockchain.getBlock(blockchain.getSize() - 1).getHash());
             }
 
             // Receiving missing blocks
             else if (received instanceof List) {
-                log.debug("Received new Blocks");
+              
                 List<Block> receivedBlocks = (List<Block>) received;
+                log.debug("Received new Blocks, size: {}", receivedBlocks.size());
                 log.warn("Not implemented: addAllValid");
                 // blockchain.addAllValid(receivedBlocks);
 
@@ -68,13 +70,16 @@ public class SimpleServerThread extends Thread {
 
             else if (received instanceof String && ((String) received).startsWith("PEER")) {
                 log.debug("New PEER announcement: {}", received);
-                String[] split = ((String) received).split("_");
-                String host = split[1];
-                int port = Integer.parseInt(split[2]);
-                PeerManager.addPeer(host, port);
+                String msg = (String) received;
+                if (msg.startsWith("PEER,")) {
+                    String[] parts = msg.split(",");
+                    String host = parts[1];
+                    String port = parts[2];
+                    log.info("Discovered node at host {} port {}", host, port);
+                    PeerManager.peerNodes.add(new ChainClient(new InetSocketAddress(host, Integer.parseInt(port))));
+                }
             }
 
-            out.writeObject("ACK");
         } catch (IOException | ClassNotFoundException e) {
             log.error("Error handling client request: {}", e.getMessage());
         }
