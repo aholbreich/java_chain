@@ -46,6 +46,21 @@ public class Blockchain {
 	public IHasher getHasher() {
 		return this.hasher;
 	}
+
+	public void addAllValid(List<Block> receivedBlocks) {
+		// TODO Auto-generated method stub
+		throw new UnsupportedOperationException("Unimplemented method 'addAllValid'");
+	}
+
+	public List<Block> getMissingNodes(String latestHash) {
+		for (int i = chain.size() - 1; i >= 0; i--) {
+			if (chain.get(i).getHash().equals(latestHash)) {
+				return chain.subList(i + 1, chain.size());
+			}
+		}
+		return null;
+	}
+	
 	
 
 }

@@ -1,5 +1,7 @@
 plugins {
     id("java")
+    id("application") // For running the application with `gradle run`
+    id("com.github.johnrengelman.shadow") version "8.1.1"  // For creating a fat JAR
 }
 
 group = "org.holbreich"
@@ -7,6 +9,20 @@ version = "1.0.0"
 
 java {
     toolchain.languageVersion.set(JavaLanguageVersion.of(21)) 
+}
+
+mainClassName = 'org.holbreich.chain.node.Node'  // TODO. Improve in the future.
+
+jar {
+    manifest {
+        attributes(
+            'Main-Class': mainClassName
+        )
+    }
+}
+
+tasks.named('shadowJar') {
+    archiveClassifier.set('')
 }
 
 sourceSets {
@@ -25,7 +41,14 @@ repositories {
 
 dependencies {
 
+    // SLF4J API
+    implementation 'org.slf4j:slf4j-api:2.0.9'
+    
+    // Logback for logging implementation
+    implementation 'ch.qos.logback:logback-classic:1.4.11'
 
+    // Optional: Logback dependencies (if needed)
+    implementation 'ch.qos.logback:logback-core:1.4.11'
     // Testing dependencies
     testImplementation("org.junit.jupiter:junit-jupiter:5.11.4")
 }
