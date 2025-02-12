@@ -1,7 +1,5 @@
 package org.holbreich.chain;
 
-import java.time.Instant;
-
 import org.holbreich.chain.hashing.IHasher;
 
 /**
@@ -12,6 +10,7 @@ public class Block {
 
 	private String hash;
 	private String previousHash;
+
 	public String getPreviousHash() {
 		return previousHash;
 	}

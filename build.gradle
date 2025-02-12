@@ -9,19 +9,35 @@ java {
     toolchain.languageVersion.set(JavaLanguageVersion.of(21)) 
 }
 
+sourceSets {
+    main {
+        java.srcDirs("src/main/java")
+    }
+    test {
+        java.srcDirs("src/test/java")
+    }
+}
+
+
 repositories {
     mavenCentral()
 }
 
 dependencies {
-    // Core dependencies
-    implementation("org.apache.commons:commons-lang3:3.12.0") // Example utility lib
+
 
     // Testing dependencies
-    testImplementation("org.junit.jupiter:junit-jupiter:5.9.2")
-    testImplementation("org.mockito:mockito-junit-jupiter:5.2.0")
+    testImplementation("org.junit.jupiter:junit-jupiter:5.11.4")
 }
 
 tasks.test {
     useJUnitPlatform() // Enables JUnit 5 tests
+    testLogging {
+        events("passed", "skipped", "failed")
+        exceptionFormat = org.gradle.api.tasks.testing.logging.TestExceptionFormat.FULL  // Full stack trace
+        showExceptions = true
+        showCauses = true
+        showStackTraces = true
+        showStandardStreams = true  // Include System.out and System.err in output
+    }
 }

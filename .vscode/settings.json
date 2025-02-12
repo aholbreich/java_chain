@@ -1,0 +1,16 @@
+{
+    "java.dependency.packagePresentation": "hierarchical",
+    "cSpell.words": [
+        "holbreich"
+    ],
+    "java.configuration.updateBuildConfiguration": "automatic",
+
+    "java.test.config": {
+        "name": "JUnit5",
+        "workingDirectory": "${workspaceFolder}",
+        "args": ["--enable-preview"],
+        "vmArgs": ["--enable-preview"],
+        "classpath": ["build/classes/java/test", "build/classes/java/main"]
+    },
+    "java.test.defaultConfig": "JUnit5"
+}
