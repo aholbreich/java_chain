@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+  node1:
+    image: java-chain-app
+    ports:
+      - "5000:5000"
+    networks:
+      - blockchain-net
+    command: ["5000"]
+    
+  node2:
+    image: java-chain-app
+    ports:
+      - "5001:5000"
+    networks:
+      - blockchain-net
+    command: ["5000"]
+
+networks:
+  blockchain-net:
+    external: true
